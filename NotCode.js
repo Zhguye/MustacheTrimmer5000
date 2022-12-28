@@ -22,7 +22,7 @@ class sprite{
         }
         this.colour = colour
         this.Attack
-        
+        this.health =100;
     }
 
     draw(){
@@ -124,7 +124,32 @@ function PunchIntersect({
         rectangle1.hitbox.position.y <= rectangle2.position.y + rectangle2.height
     )
 }
-
+let Time=10
+function DTimer(){
+  
+    if(Time>0){
+        setTimeout(DTimer, 1000)
+        Time-- 
+        document.querySelector('#Clock').innerHTML = Time}
+        if (Time ===0){
+            document.querySelector('#Baa').style.display = 'flex'
+        if(player.health===enemy.health) {
+            document.querySelector('#Baa').innerHTML = 'Tie!'
+            
+        }
+        else if(player.health<enemy.health) {
+            document.querySelector('#Baa').innerHTML = 'Player 2 Wins!'
+           
+        }
+        else if( player.health>enemy.health){
+            document.querySelector('#Baa').innerHTML = 'Player 1 Wins!'
+            
+        }
+    }
+       
+         //player 1 wins
+}
+DTimer()
 function tribulate() {
 window.requestAnimationFrame(tribulate)
 d.fillStyle ='lightblue'
@@ -154,7 +179,8 @@ if(
         rectangle2:enemy
     }) && player.Attack
     ) { player.Attack =false
-     document.querySelector('#HealthR').style.width='20%'
+        enemy.health-=20
+     document.querySelector('#HealthR').style.width= enemy.health + '%'
 }
 
 if(
@@ -163,7 +189,8 @@ if(
         rectangle2:player
     }) && enemy.Attack
     ) { enemy.Attack =false
-     console.log('B')
+        player.health-=20
+        document.querySelector('#HealthL').style.width= player.health + '%'
 }
 
 }
