@@ -10,7 +10,7 @@ const gravity =0.2
 
 
 class sprite{
-    constructor({position, velocity, colour='magenta', offset}){
+    constructor({position, velocity, colour='magenta', offset,offset1}){
         this.position=position;
         this.velocity =velocity;
         this.height = 150;
@@ -25,7 +25,7 @@ class sprite{
         this.health =100;
         this.Blockbox =  {
             position: { x: this.position.x, y: this.position.y}
-             , width: 20, height: 150, offset
+             , width: 20, height: 150, offset1
         }
         this.Block
 
@@ -53,7 +53,7 @@ class sprite{
         this.draw()
         this.hitbox.position.x = this.position.x + this.hitbox.offset.x
         this.hitbox.position.y = this.position.y
-        this.Blockbox.position.x = this.position.x + this.Blockbox.offset.x
+        this.Blockbox.position.x = this.position.x + this.Blockbox.offset1.x+ 70
         this.Blockbox.position.y = this.position.y
 
         this.position.x+= this.velocity.x
@@ -95,6 +95,10 @@ velocity: {
 offset: {
     x:0,
     y:0
+},
+offset1: {
+    x:0,
+    y:0
 }
 
 });
@@ -113,6 +117,10 @@ offset: {
     x:-50,
     y:0
 },
+offset1: {
+    x:-110,
+    y:0
+},
 colour : "blue"
 });
 enemy.draw()
@@ -129,6 +137,7 @@ const keys = {
     w : {
         pressed:false
     },
+ 
 
     ArrowLeft: {
         pressed:false
@@ -202,7 +211,7 @@ player.update()
 enemy.update()
 player.velocity.x =0
 enemy.velocity.x=0
-if (keys.a.pressed && player.lastkey === 'a'){
+if (keys.a.pressed && player.lastkey  === 'a'){
     player.velocity.x = -1
 }else if (keys.d.pressed && player.lastkey ==='d') {
     player.velocity.x =1 
@@ -213,6 +222,8 @@ if (keys.ArrowLeft.pressed && enemy.lastkey === 'ArrowLeft'){
 }else if (keys.ArrowRight.pressed && enemy.lastkey ==='ArrowRight') {
     enemy.velocity.x =1 
 }
+
+
 
 //collision detection.
 if(
