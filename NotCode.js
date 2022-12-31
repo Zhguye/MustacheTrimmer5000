@@ -23,6 +23,12 @@ class sprite{
         this.colour = colour
         this.Attack
         this.health =100;
+        this.Blockbox =  {
+            position: { x: this.position.x, y: this.position.y}
+             , width: 20, height: 150, offset
+        }
+        this.Block
+
     }
 
     draw(){
@@ -34,12 +40,22 @@ class sprite{
     d.fillStyle ="red"
     d.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height)
     }
+
+    //blockbox
+    if (this.Block){
+        d.fillstyle = 'yellow'
+        d.fillRect(this.Blockbox.position.x, this.Blockbox.position.y, this.Blockbox.width, this.Blockbox.height)
+    }
+    
 }
 
     update(){
         this.draw()
         this.hitbox.position.x = this.position.x + this.hitbox.offset.x
         this.hitbox.position.y = this.position.y
+        this.Blockbox.position.x = this.position.x + this.Blockbox.offset.x
+        this.Blockbox.position.y = this.position.y
+
         this.position.x+= this.velocity.x
         this.position.y+= this.velocity.y
 
@@ -53,9 +69,20 @@ class sprite{
    this.Attack = true
    setTimeout(() => {
     this.Attack = false
-   }, 10000)
+   }, 1000)
+    }
+
+    blocking(){
+        this.Block = true
+        setTimeout(()=>{
+            this.Block =false
+        }, 100)
     }
 };
+
+
+
+
 
 const player = new sprite({position: {
     x:0,
@@ -69,6 +96,7 @@ offset: {
     x:0,
     y:0
 }
+
 });
 player.draw()
 
@@ -124,7 +152,21 @@ function PunchIntersect({
         rectangle1.hitbox.position.y <= rectangle2.position.y + rectangle2.height
     )
 }
-let Time=10
+
+
+function BlockIntersect({
+    rectangle3, rectangle4
+}){
+    return(
+        rectangle3.Blockbox.position.x+ rectangle3.Blockbox.width >= rectangle4.position.x &&
+        rectangle3.Blockbox.position.x <= rectangle4.position.x + rectangle4.width &&
+        rectangle3.Blockbox.position.y + rectangle3.Blockbox.height >= rectangle4.position.y && 
+        rectangle3.Blockbox.position.y <= rectangle4.position.y + rectangle4.height
+    )
+}
+
+
+let Time=60
 function DTimer(){
   
     if(Time>0){
@@ -193,6 +235,27 @@ if(
         document.querySelector('#HealthL').style.width= player.health + '%'
 }
 
+if(
+    BlockIntersect({
+        rectangle3:enemy,
+        rectangle4:player
+    }) && enemy.Block
+    ) { enemy.Block =false
+        player.health-=5
+        document.querySelector('#HealthL').style.width= player.health + '%'
+}
+
+if(
+    BlockIntersect({
+        rectangle3:player,
+        rectangle4:enemy
+    }) && player.Block
+    ) { player.Block =false
+        enemy.health-=5
+        document.querySelector('#HealthR').style.width= enemy.health + '%'
+}
+
+
 }
 
 tribulate()
@@ -217,6 +280,10 @@ switch (event.key){
         player.attacks()
     break
 
+    case 'e':
+        player.blocking()
+    break
+
 
 case 'ArrowRight':
     keys.ArrowRight.pressed = true
@@ -234,6 +301,11 @@ break
 case 'End':
         enemy.attacks()
     break
+
+    case 'l':
+        enemy.blocking()
+    break
+
 }
     
 
