@@ -205,7 +205,7 @@ function DTimer(){
             Gamestate({player2, player})
     }
        
-         //player 1 wins
+         
 }
 DTimer()
 function tribulate() {
