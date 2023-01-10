@@ -1,4 +1,3 @@
-
 const canvas =document.querySelector('canvas');
 
 const d = canvas.getContext('2d');
@@ -104,7 +103,7 @@ offset1: {
 });
 player.draw()
 
-const enemy = new sprite({position:{
+const player2 = new sprite({position:{
     x:974,
     y:0
 },
@@ -123,7 +122,7 @@ offset1: {
 },
 colour : "blue"
 });
-enemy.draw()
+player2.draw()
 
 console.log(player)
 
@@ -173,6 +172,24 @@ function BlockIntersect({
         rectangle3.Blockbox.position.y <= rectangle4.position.y + rectangle4.height
     )
 }
+function Gamestate({player2, player}){
+
+    document.querySelector('#Baa').style.display = 'flex'
+
+    if(player.health===player2.health) {
+        document.querySelector('#Baa').innerHTML = 'Tie!'
+        
+    }
+    else if(player.health<player2.health) {
+        document.querySelector('#Baa').innerHTML = 'Player 2 Wins!'
+       
+    }
+    else if( player.health>player2.health){
+        document.querySelector('#Baa').innerHTML = 'Player 1 Wins!'
+        
+    }
+
+}
 
 
 let Time=60
@@ -184,18 +201,8 @@ function DTimer(){
         document.querySelector('#Clock').innerHTML = Time}
         if (Time ===0){
             document.querySelector('#Baa').style.display = 'flex'
-        if(player.health===enemy.health) {
-            document.querySelector('#Baa').innerHTML = 'Tie!'
-            
-        }
-        else if(player.health<enemy.health) {
-            document.querySelector('#Baa').innerHTML = 'Player 2 Wins!'
-           
-        }
-        else if( player.health>enemy.health){
-            document.querySelector('#Baa').innerHTML = 'Player 1 Wins!'
-            
-        }
+       
+            Gamestate({player2, player})
     }
        
          //player 1 wins
@@ -208,19 +215,19 @@ d.fillRect(0,0, canvas.width,canvas.height)
 d.fillStyle = 'beige'
 d.fillRect(0,0, canvas.width,canvas.height/2 )
 player.update()
-enemy.update()
+player2.update()
 player.velocity.x =0
-enemy.velocity.x=0
+player2.velocity.x=0
 if (keys.a.pressed && player.lastkey  === 'a'){
     player.velocity.x = -1
 }else if (keys.d.pressed && player.lastkey ==='d') {
     player.velocity.x =1 
 }
 
-if (keys.ArrowLeft.pressed && enemy.lastkey === 'ArrowLeft'){
-    enemy.velocity.x = -1
-}else if (keys.ArrowRight.pressed && enemy.lastkey ==='ArrowRight') {
-    enemy.velocity.x =1 
+if (keys.ArrowLeft.pressed && player2.lastkey === 'ArrowLeft'){
+    player2.velocity.x = -1
+}else if (keys.ArrowRight.pressed && player2.lastkey ==='ArrowRight') {
+    player2.velocity.x =1 
 }
 
 
@@ -229,29 +236,29 @@ if (keys.ArrowLeft.pressed && enemy.lastkey === 'ArrowLeft'){
 if(
     PunchIntersect({
         rectangle1:player,
-        rectangle2:enemy
+        rectangle2:player2
     }) && player.Attack
     ) { player.Attack =false
-        enemy.health-=20
-     document.querySelector('#HealthR').style.width= enemy.health + '%'
+        player2.health-=20
+     document.querySelector('#HealthR').style.width= player2.health + '%'
 }
 
 if(
     PunchIntersect({
-        rectangle1:enemy,
+        rectangle1:player2,
         rectangle2:player
-    }) && enemy.Attack
-    ) { enemy.Attack =false
+    }) && player2.Attack
+    ) { player2.Attack =false
         player.health-=20
         document.querySelector('#HealthL').style.width= player.health + '%'
 }
 
 if(
     BlockIntersect({
-        rectangle3:enemy,
+        rectangle3:player2,
         rectangle4:player
-    }) && enemy.Block
-    ) { enemy.Block =false
+    }) && player2.Block
+    ) { player2.Block =false
         player.health-=5
         document.querySelector('#HealthL').style.width= player.health + '%'
 }
@@ -259,13 +266,18 @@ if(
 if(
     BlockIntersect({
         rectangle3:player,
-        rectangle4:enemy
+        rectangle4:player2
     }) && player.Block
     ) { player.Block =false
-        enemy.health-=5
-        document.querySelector('#HealthR').style.width= enemy.health + '%'
+        player2.health-=5
+        document.querySelector('#HealthR').style.width= player2.health + '%'
 }
 
+
+if (player.health <= 0 || player2.health <=0){
+    Gamestate({player2,player})
+
+}
 
 }
 
@@ -298,23 +310,23 @@ switch (event.key){
 
 case 'ArrowRight':
     keys.ArrowRight.pressed = true
-    enemy.lastkey = 'ArrowRight'
+    player2.lastkey = 'ArrowRight'
 break
 case 'ArrowLeft':
     keys.ArrowLeft.pressed =true
-    enemy.lastkey = 'ArrowLeft'
+    player2.lastkey = 'ArrowLeft'
 break
 
 case 'ArrowUp':
-    enemy.velocity.y = -10;
+    player2.velocity.y = -10;
    
 break
 case 'End':
-        enemy.attacks()
+        player2.attacks()
     break
 
     case 'l':
-        enemy.blocking()
+        player2.blocking()
     break
 
 }
